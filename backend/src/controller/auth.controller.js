@@ -73,52 +73,46 @@ async function verifyemailcontroller(req, res, next) {
   });
 }
 
+async function logincontroller(req, res, next) {
+  const { email, password, username } = req.body;
 
-async function logincontroller (req,res,next) {
-  const {email, password, username} = req.body;
-  
-  const user = await userModel.findOne({email})
+  const user = await userModel.findOne({ email });
 
-  if(!user){
-    res.status(401).json({
-      message:"user or pass is not present "
-    })
+  if (!user) {
+    return res.status(401).json({
+      message: "user or pass is not present ",
+    });
   }
 
-  if(user.verified==false){
-    res.status(401)({
-      message:" user is not verified "
-    })
+  if (user.verified == false) {
+    return res.status(401).json({
+      message: " user is not verified ",
+    });
   }
-  const isPasswordMatch = await bcrypt.compare(password,user.password)
+  const isPasswordMatch = await bcrypt.compare(password, user.password);
 
-  if(!isPasswordMatch){
-    res.status(402).json({
-       message:" password is in correct  "
-    })
+  if (!isPasswordMatch) {
+    return res.status(402).json({
+      message: " password is in correct  ",
+    });
   }
-  
-  const token =  jwt.sign({id:user._id},config.jwt_srcret,{
-    expiresIn:"3d"
-  })
 
+  const token = jwt.sign({ id: user._id }, config.jwt_srcret, {
+    expiresIn: "3d",
+  });
 
-  res.cookie("token",token)
+  res.cookie("token", token);
 
-  res.status(201).json({
-    message:"login done "
-  })
-
+  return res.status(201).json({
+    message: "login done ",
+  });
 }
 
+async function getmecontroller(req, res, next) {}
 
-
-async function getmecontroller(req,res,next) {
-
-  
-}
-
-
-
-
-export default { registercontroller, verifyemailcontroller ,logincontroller ,getmecontroller };
+export default {
+  registercontroller,
+  verifyemailcontroller,
+  logincontroller,
+  getmecontroller,
+};
