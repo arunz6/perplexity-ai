@@ -5,9 +5,10 @@ import {
   validate,
   loginValidator,
 } from "../validator/auth.validator.js";
+import { authuser } from "../middleware/auth.middleware.js";
+
 const authroute = Router();
 
-// http://localhost:3000/api/auth/register
 authroute.post(
   "/register",
   registerValidator,
@@ -18,6 +19,6 @@ authroute.get("/verify-email", authController.verifyemailcontroller);
 
 authroute.post("/login", loginValidator, authController.logincontroller);
 
-authroute.get("/getme", authController.getmecontroller);
+authroute.get("/getme", authuser, authController.getmecontroller);
 
 export default authroute;

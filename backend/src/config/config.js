@@ -32,6 +32,11 @@ if (!process.env.jwt_secret) {
     "jwt secret is not present or cant assecs from dot env file ",
   );
 }
+if (!process.env.ai_api_key) {
+  throw new Error(
+    "ai_api_key is not present or cant assecs from dot env file ",
+  );
+}
 const config = {
   mognouri: process.env.mongouri,
   Client_ID: process.env.Client_ID,
@@ -39,6 +44,7 @@ const config = {
   Refresh_token: process.env.Refresh_token,
   Google_user: process.env.Google_user,
   jwt_srcret: process.env.jwt_secret,
+  ai_api_key: process.env.ai_api_key,
 };
 
 export default config;

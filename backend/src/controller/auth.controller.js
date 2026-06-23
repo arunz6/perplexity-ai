@@ -108,7 +108,23 @@ async function logincontroller(req, res, next) {
   });
 }
 
-async function getmecontroller(req, res, next) {}
+async function getmecontroller(req, res, next) {
+  const userid = req.user.id;
+
+  const user = await userModel.findById(userid).select("-password");
+
+  if (!user) {
+    res.saveatus(404).json({
+      message: "user not found ",
+    });
+  }
+
+  res.status(200).json({
+    message: "user found ",
+    success: true,
+    user,
+  });
+}
 
 export default {
   registercontroller,
