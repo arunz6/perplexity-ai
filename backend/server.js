@@ -4,7 +4,7 @@ import testai from "./src/services/ai.service.js";
 import textai from "./src/services/ai.service.js";
 
 connecttodb();
-testai();
+
 
 app.listen(5000, () => {
   console.log("server is running ");
