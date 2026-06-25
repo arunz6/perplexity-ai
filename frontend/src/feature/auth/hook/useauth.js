@@ -38,7 +38,7 @@ export const useauth = () => {
     }
   }
 
- return {
+  return {
     registeruser,
     loginuser,
     getmeuser,

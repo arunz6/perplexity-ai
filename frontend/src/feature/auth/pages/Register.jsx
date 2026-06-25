@@ -1,11 +1,16 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useauth } from "../hook/useauth";
+import { useSelector } from "react-redux";
 
 const Register = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const user = useSelector((state) => state.auth.user);
+  const loding = useSelector((state) => state.auth.Loading);
+
   const { registeruser } = useauth();
   const navigate = useNavigate();
 
@@ -15,6 +20,10 @@ const Register = () => {
     await registeruser(payload);
     navigate("/login");
   };
+
+  if (!loding && user) {
+    navigate("/");
+  }
 
   return (
     <main className="min-h-screen bg-[#050505] text-white flex items-center justify-center px-4 py-10">

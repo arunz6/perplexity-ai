@@ -1,10 +1,15 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useauth } from "../hook/useauth";
+import { useSelector } from "react-redux";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const user = useSelector((state) => state.auth.user);
+  const loding = useSelector((state) => state.auth.Loading);
+
   const navigate = useNavigate();
   const { loginuser } = useauth();
 
@@ -14,6 +19,10 @@ const Login = () => {
     await loginuser(payload);
     navigate("/");
   };
+
+  if (!loding && user) {
+    navigate("/");
+  }
 
   return (
     <main className="min-h-screen bg-[#030303] text-white flex items-center justify-center px-4 py-10">
