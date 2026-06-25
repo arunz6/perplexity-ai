@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useauth } from "../hook/useauth";
 import { useSelector } from "react-redux";
+import { Navigate } from "react-router";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -21,7 +22,7 @@ const Login = () => {
   };
 
   if (!loding && user) {
-    navigate("/");
+    return navigate("/");
   }
 
   return (

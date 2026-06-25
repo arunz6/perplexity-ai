@@ -1,19 +1,19 @@
+import { Navigate } from "react-router-dom"; // ← import karo
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 
-const Procteded = ({ children }) => {
+const Protected = ({ children }) => {
   const user = useSelector((state) => state.auth.user);
-  const loding = useSelector((state) => state.auth.Loading);
-  const navigate = useNavigate();
+  const loading = useSelector((state) => state.auth.loading);
 
-  if (loding) {
+  if (loading) {
     return <div>Loading...</div>;
   }
+
   if (!user) {
-    return navigate("/login");
+    return <Navigate to="/login" replace />; // ✅ Uppercase N
   }
 
   return children;
 };
 
-export default Procteded;
+export default Protected;

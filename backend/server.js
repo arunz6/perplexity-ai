@@ -1,12 +1,17 @@
 import app from "./src/app.js";
 import connecttodb from "./src/config/connecttodb.js";
-import testai from "./src/services/ai.service.js";
+
 import textai from "./src/services/ai.service.js";
+import http from "http";
+import { initSocket } from "./src/socket/server.socket.js";
 
 connecttodb();
 
+const httpServer = http.createServer(app);
 
-app.listen(5000, () => {
+initSocket(httpServer);
+
+httpServer.listen(5000, () => {
   console.log("server is running ");
 });
 

@@ -24,6 +24,7 @@
     "mongoose": "^9.6.2",
     "morgan": "^1.11.0",
     "nodemailer": "^8.0.9",
-    "nodemon": "^3.1.14"
+    "nodemon": "^3.1.14",
+    "socket.io": "^4.8.3"
   }
 }

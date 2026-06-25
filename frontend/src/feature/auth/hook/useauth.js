@@ -1,4 +1,4 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch,  } from "react-redux";
 import { login, register, getme } from "../service/auth.api";
 import { setuser, setisLoading, setisError } from "../auth.slice";
 
