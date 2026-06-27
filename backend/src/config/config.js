@@ -37,6 +37,12 @@ if (!process.env.ai_api_key) {
     "ai_api_key is not present or cant assecs from dot env file ",
   );
 }
+
+if (!process.env.mistralapi) {
+  throw new Error(
+    "mistralapi is not present or cant assecs from dot env file ",
+  );
+}
 const config = {
   mognouri: process.env.mongouri,
   Client_ID: process.env.Client_ID,
@@ -45,6 +51,7 @@ const config = {
   Google_user: process.env.Google_user,
   jwt_srcret: process.env.jwt_secret,
   ai_api_key: process.env.ai_api_key,
+  mistralapi: process.env.mistralapi,
 };
 
 export default config;

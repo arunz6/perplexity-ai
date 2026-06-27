@@ -1,7 +1,6 @@
 import app from "./src/app.js";
 import connecttodb from "./src/config/connecttodb.js";
 
-import textai from "./src/services/ai.service.js";
 import http from "http";
 import { initSocket } from "./src/socket/server.socket.js";
 
