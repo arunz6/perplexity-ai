@@ -3,9 +3,8 @@ import { usechat } from "../hook/usechat";
 
 const Dashboard = () => {
   useState(() => {
-    const { handelsandmessage } = usechat;
-    handelsandmessage({umessage:"hello"})
-  },[]);
+    const { handelsandmessage } = usechat();
+  }, []);
   return (
     <main className="min-h-screen w-full bg-[#07090f] p-3 text-white md:p-5">
       <section className="mx-auto flex h-[calc(100vh-1.5rem)] w-full gap-4 rounded-3xl border   p-1 md:h-[calc(100vh-2.5rem)] md:gap-6 md:p-1 border-none">

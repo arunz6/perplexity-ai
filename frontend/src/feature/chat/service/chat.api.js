@@ -25,4 +25,4 @@ const deleteChat = async (chatId) => {
   return response.data;
 };
 
-export default { chatmessage, getchats, getmessages, deleteChat };
+export { chatmessage, getchats, getmessages, deleteChat };

@@ -17,25 +17,33 @@ import {
 } from "../chat.slice";
 
 export const usechat = () => {
-  return { initalizeSocketconnection };
-
   const dispatch = useDispatch();
 
   async function handelsandmessage({ umessage, chatId }) {
     dispatch(setLoading(true));
     const data = await chatmessage({ umessage, chatId });
     const { chat, aimessage } = data;
-    console.log({ chat, aimessage });
-    console.log(data);
+    if (!chatId) {
+      dispatch(createNewChat({ chatId: chat._id, title: chat.title }));
+    }
+    dispatch(
+      addNewMessage({
+        chatId: chatId || chat._id,
+        content: umessage,
+        role: "user",
+      }),
+    );
+    (dispatch(
+      addNewMessage({
+        chatId: chatId || chat._id,
+        content: aimessage.content,
+        role: aimessage.role,
+      }),
+    ),
+      dispatch(setCurrentChatId(chat._id)));
   }
 
-  return {
-    handelsandmessage,
-  };
-
-
   
+
+  return { initalizeSocketconnection, handelsandmessage };
 };
-
-
-
