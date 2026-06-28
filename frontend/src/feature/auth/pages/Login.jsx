@@ -22,9 +22,8 @@ const Login = () => {
   };
 
   if (!loding && user) {
-    return navigate("/");
+    return <Navigate to="/" replace />;
   }
-
   return (
     <main className="min-h-screen bg-[#030303] text-white flex items-center justify-center px-4 py-10">
       <section className="w-full max-w-md rounded-3xl border border-orange-500/20 bg-slate-950/95 p-10 shadow-[0_25px_80px_-35px_rgba(249,115,22,0.8)] backdrop-blur-sm">

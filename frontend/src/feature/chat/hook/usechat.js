@@ -43,7 +43,50 @@ export const usechat = () => {
       dispatch(setCurrentChatId(chat._id)));
   }
 
-  
+  async function handelchats() {
+    dispatch(setLoading(true));
+    const data = await getchats();
+    const { chats } = data;
+    dispatch(
+      setChats(
+        chats.reduce((acc, chat) => {
+          acc[chat._id] = {
+            id: chat._id,
+            title: chat.title,
+            messages: [],
+            lastUpdated: chat.updatedAt,
+          };
+          return acc;
+        }, {}),
+      ),
+    );
+    dispatch(setLoading(false));
+  }
 
-  return { initalizeSocketconnection, handelsandmessage };
+  async function handelopenchat(chatId, chats) {
+    console.log(chats[chatId]?.messages.length);
+    if (chats[chatId]?.messages.length === 0) {
+      const data = await getmessages(chatId);
+      const { messages } = data;
+      const formattedMessages = messages.map((msg) => ({
+        content: msg.content,
+        role: msg.role,
+      }));
+
+      dispatch(
+        addMessages({
+          chatId,
+          messages: formattedMessages,
+        }),
+      );
+    }
+    dispatch(setCurrentChatId(chatId));
+  }
+
+  return {
+    initalizeSocketconnection,
+    handelsandmessage,
+    handelchats,
+    handelopenchat,
+  };
 };

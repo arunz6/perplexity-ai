@@ -15,8 +15,10 @@
     "axios": "^1.18.1",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
+    "react-markdown": "^10.1.0",
     "react-redux": "^9.3.0",
     "react-router-dom": "^6.26.0",
+    "remark-gfm": "^4.0.1",
     "socket.io-client": "^4.8.3",
     "tailwindcss": "^4.3.1"
   },
