@@ -43,6 +43,9 @@ if (!process.env.mistralapi) {
     "mistralapi is not present or cant assecs from dot env file ",
   );
 }
+if (!process.env.tavilyapi) {
+  throw new Error("tavilyapi is not present or cant access from .env file");
+}
 const config = {
   mognouri: process.env.mongouri,
   Client_ID: process.env.Client_ID,
@@ -52,6 +55,7 @@ const config = {
   jwt_srcret: process.env.jwt_secret,
   ai_api_key: process.env.ai_api_key,
   mistralapi: process.env.mistralapi,
+  tavilyapi: process.env.tavilyapi,
 };
 
 export default config;

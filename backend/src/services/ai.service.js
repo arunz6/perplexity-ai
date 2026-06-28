@@ -1,46 +1,88 @@
-import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
-import config from "../config/config.js";
 import { ChatMistralAI } from "@langchain/mistralai";
-import { HumanMessage, SystemMessage } from "@langchain/core/messages";
-import { AIMessage } from "@langchain/core/messages";
+import {
+  HumanMessage,
+  SystemMessage,
+  AIMessage,
+} from "@langchain/core/messages";
+import { tool } from "@langchain/core/tools";
+import { createReactAgent } from "@langchain/langgraph/prebuilt";
+import * as z from "zod";
+import config from "../config/config.js";
+import { searchInternet } from "./internet.service.js";
 
-// ✅ Yeh try karo — abhi bhi free hai
-const model = new ChatGoogleGenerativeAI({
-  model: "gemini-pro",
-  apiKey: config.ai_api_key,
-});
+console.log("Mistral Key:", config.mistralapi ? "✅ Loaded" : "❌ MISSING");
 
 const mistralmodel = new ChatMistralAI({
   apiKey: config.mistralapi,
   model: "mistral-large-latest",
 });
 
-export async function genrateresponse(messages) {
-  const response = await mistralmodel.invoke(
-    messages.map((msg) => {
-      if (msg.role == "user") {
-        return new HumanMessage(msg.content);
-      } else if (msg.role == "ai") {
-        return new AIMessage(msg.content);
-      }
-    }),
-  );
+const searchInternettool = tool(searchInternet, {
+  name: "searchinternet",
+  description: "Use this tool to get the latest information from the internet.",
+  schema: z.object({
+    query: z.string().describe("The search query to look up on the internet."),
+  }),
+});
 
-  return response.text;
+const agent = createReactAgent({
+  llm: mistralmodel,
+  tools: [searchInternettool],
+  // ✅ Yahi main fix hai — system prompt force karega tool use karne ke liye
+  stateModifier: new SystemMessage(`
+    You are a helpful AI assistant with access to real-time internet search.
+    
+    IMPORTANT RULES:
+    - For ANY question about current date, time, today's news, recent events, 
+      latest information — ALWAYS use the searchinternet tool first.
+    - NEVER answer from your training data for time-sensitive questions.
+    - Today's information must come from search results only.
+    - Always search before answering questions like:
+      "what is today's date", "latest news", "current events", "recent updates"
+  `),
+});
+
+export async function genrateresponse(messages) {
+  try {
+    const response = await agent.invoke({
+      messages: messages
+        .map((msg) => {
+          if (msg.role === "user") return new HumanMessage(msg.content);
+          if (msg.role === "ai") return new AIMessage(msg.content);
+          if (msg.role === "system") return new SystemMessage(msg.content);
+        })
+        .filter(Boolean),
+    });
+
+    const allMessages = response.messages;
+    const lastMessage = allMessages[allMessages.length - 1];
+
+    if (typeof lastMessage.content === "string") {
+      return lastMessage.content;
+    } else if (Array.isArray(lastMessage.content)) {
+      return lastMessage.content
+        .map((c) => c.text || "")
+        .join("");
+    }
+  } catch (error) {
+    console.error("❌ Agent Error:", error.message);
+    throw error;
+  }
 }
 
 export async function genratetitleofchat(message) {
-  const response = await mistralmodel.invoke([
-    new SystemMessage(`
-            You are a helpful assistant that generates concise and descriptive titles for chat conversations.
-            
-            User will provide you with the first message of a chat conversation, and you will generate a title that captures the essence of the conversation in 2-4 words. The title should be clear, relevant, and engaging, giving users a quick understanding of the chat's topic.    
-        `),
-    new HumanMessage(`
-            Generate a title for a chat conversation based on the following first message:
-            "${message}"
-            `),
-  ]);
+  try {
+    const response = await mistralmodel.invoke([
+      new SystemMessage(`
+        You are a helpful assistant that generates concise titles for chat conversations.
+        Generate a title in 2-4 words that captures the essence of the conversation.
+      `),
+      new HumanMessage(`Generate a title for: "${message}"`),
+    ]);
 
-  return response.text;
+    return response.content;
+  } catch (error) {
+    console.error("❌ Title Generation Error:", error.message);
+    throw error;
+  }
 }
