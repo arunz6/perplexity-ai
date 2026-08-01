@@ -17,5 +17,4 @@ httpServer.listen(5000, () => {
   console.log("server is running ");
 });
 
-// 57 min class 120;
-//  class 121
+//isme google auth ke nodemailer ke problem aa rahe h 
