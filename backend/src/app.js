@@ -20,4 +20,10 @@ app.use("/api/auth", authroute);
 app.use("/api/chat", chatrouter);
 
 app.use(errhandler);
+
+app.use(express.static("public"))
+
+app.use("*name",(req,res)=>{
+    res.sendFile("index.html",{root:"public"})
+})
 export default app;

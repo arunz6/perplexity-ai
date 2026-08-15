@@ -10,7 +10,7 @@ export const useauth = () => {
       dispatch(setisLoading(true));
       const data = await register({ username, email, password });
     } catch (error) {
-      dispatch(setisError(error.response));
+      dispatch(setisError(error.response.data.message));
     } finally {
       dispatch(setisLoading(false));
     }
@@ -19,6 +19,7 @@ export const useauth = () => {
     try {
       dispatch(setisLoading(true));
       const data = await login({ email, password });
+      
       dispatch(setuser(data.user));
     } catch (error) {
       dispatch(setisError(error.response.data.message));
